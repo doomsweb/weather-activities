@@ -233,7 +233,7 @@ export function Home() {
                         (
                             <div className={classNames("h-screen overflow-hidden flex flex-col justify-center items-center", getWeatherName(weather.current.weather_code).style)}>
                                 <div className="fixed flex gap-2 top-0 right-0 m-4 bg-white/10 p-4 rounded-md text-white">
-                                    <p>{location?.postcode} {location?.town}</p>
+                                    <p>{location?.postcode} {location?._normalized_city}</p>
                                     <button className="text-indigo-800 hover:text-indigo-600" onClick={clearLocation}>PLZ ändern?</button>
                                 </div>
 
