@@ -35,6 +35,7 @@ export function Home() {
     }
 
     const getWeatherName = (code) => {
+        // code = 99
         switch (code) {
             case 0:
                 return {
@@ -166,7 +167,7 @@ export function Home() {
     const fetchWeather = () => {
         if(coords) {
             const coords = JSON.parse(localStorage.getItem("coords"))
-            axios.get(`${import.meta.env.VITE_OPEN_METEO_URL}/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,is_day,weather_code&hourly=temperature_2m`).then((response) => {
+            axios.get(`${import.meta.env.VITE_OPEN_METEO_URL}/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,is_day,weather_code,wind_speed_10m,relative_humidity_2m`).then((response) => {
                 setWeather(response.data)
             }).catch((error) => {
                 console.log(error)
@@ -235,8 +236,75 @@ export function Home() {
                                     <p>{location?.postcode} {location?.town}</p>
                                     <button className="text-indigo-800 hover:text-indigo-600" onClick={clearLocation}>PLZ ändern?</button>
                                 </div>
+
+                                <div className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-1 xl:gap-x-8 h-72 w-full p-8">
+                                    <div className="bg-white/30 rounded-md shadow-lg border-8 border-white/30">
+                                        <div className="flex flex-col h-full relative">
+                                            
+                                            <span className="absolute top-0 px-3 py-2 text-lg">Empfehlung</span>
+                                            {/* {JSON.stringify(data.current.)} */}
+                                            <div className="h-full flex justify-center items-center text-4xl">
+                                            {getRandomRecommendationItem(getRecommendation(getWeatherName(weather.current.weather_code).type))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-4 xl:gap-x-8 h-72 w-full p-8">
+                                    <div className="bg-white/30 rounded-md shadow-lg border-8 border-white/30">
+                                        <div className="flex flex-col h-full relative">
+                                            <span className="absolute top-0 px-3 py-2 text-lg">Temperatur</span>
+                                            {/* {JSON.stringify(data.current.)} */}
+                                            <div className="h-full flex justify-center items-center text-4xl">
+                                                {weather.current.temperature_2m} {weather.current_units.temperature_2m}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white/30 rounded-md shadow-lg border-8 border-white/30">
+                                        <div className="flex flex-col h-full relative">
+                                            <span className="absolute top-0 px-3 py-2 text-lg">Windgeschwindigkeit</span>
+                                            {/* {JSON.stringify(data.current.)} */}
+                                            <div className="h-full flex justify-center items-center text-4xl">
+                                                {weather.current.wind_speed_10m} {weather.current_units.wind_speed_10m}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white/30 rounded-md shadow-lg border-8 border-white/30">
+                                        <div className="flex flex-col h-full relative">
+                                            <span className="absolute top-0 px-3 py-2 text-lg">Wetterbedingungen</span>
+                                            {/* {JSON.stringify(data.current.)} */}
+                                            <div className="h-full flex flex-col justify-center items-center text-4xl">
+                                                <Lottie
+                                                    className="h-20"
+                                                    animationData={getWeatherName(weather.current.weather_code).icon}
+                                                    options={
+                                                        {
+                                                            loop: true,
+                                                            autoplay: true,
+                                                            animationData: getWeatherName(weather.current.weather_code).icon,
+                                                            rendererSettings: {
+                                                                preserveAspectRatio: "xMidYMid slice"
+                                                            }
+                                                        }
+                                                    }
+                                                />
+                                                <span className="text-sm text-center">{getWeatherName(weather.current.weather_code).text}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white/30 rounded-md shadow-lg border-8 border-white/30">
+                                        <div className="flex flex-col h-full relative">
+                                            <span className="absolute top-0 px-3 py-2 text-lg">Luftfeuchtigkeit</span>
+                                            {/* {JSON.stringify(data.current.)} */}
+                                            <div className="h-full flex justify-center items-center text-4xl">
+                                                {weather.current.relative_humidity_2m} {weather.current_units.relative_humidity_2m}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 
-                                <span className="text-4xl font-bold mb-4">{weather.current.temperature_2m} {weather.current_units.temperature_2m}</span>
+                                
+                                {/* <span className="text-4xl font-bold mb-4">{weather.current.temperature_2m} {weather.current_units.temperature_2m}</span>
                                 <span className="text-2xl">{getWeatherName(weather.current.weather_code).text}</span>
                                 <Lottie
                                     className="h-1/2"
@@ -251,8 +319,8 @@ export function Home() {
                                             }
                                         }
                                     }
-                                />
-                                <span className="text-4xl italic mt-3">Vorschlag: {getRandomRecommendationItem(getRecommendation(getWeatherName(weather.current.weather_code).type))}</span>
+                                />*/}
+                                {/* <span className="text-4xl italic mt-3">Vorschlag: {getRandomRecommendationItem(getRecommendation(getWeatherName(weather.current.weather_code).type))}</span>  */}
                             </div>
 
                         )
